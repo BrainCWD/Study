@@ -1,0 +1,243 @@
+============================================
+vis/result.rtx
+17:50:55_Tuesday_27_March_2018
+============================================
+Feedback:
+	Your program ("Nimsys.java") has been submitted successfully.
+	Compiling your program with "javac"...
+	Your program has been result.rtxd successfully :-)
+Now, it's your responsibility to test your program for correctness!
+Here is a simple test case, and the results:
+============================================
+Test for input file: in1
+Expected results:							Your results:
+Welcome to Nim								Welcome to Nim
+
+Please enter Player 1's name:						Please enter Player 1's name:
+
+Please enter Player 2's name:						Please enter Player 2's name:
+
+Please enter upper bound of stone removal:				Please enter upper bound of stone removal:
+
+Please enter initial number of stones:					Please enter initial number of stones:
+
+12 stones left: * * * * * * * * * * * *					12 stones left: * * * * * * * * * * * *
+Luke's turn - remove how many?						Luke's turn - remove how many?
+
+9 stones left: * * * * * * * * *					9 stones left: * * * * * * * * *
+Han's turn - remove how many?						Han's turn - remove how many?
+
+8 stones left: * * * * * * * *						8 stones left: * * * * * * * *
+Luke's turn - remove how many?						Luke's turn - remove how many?
+
+7 stones left: * * * * * * *						7 stones left: * * * * * * *
+Han's turn - remove how many?						Han's turn - remove how many?
+
+5 stones left: * * * * *						5 stones left: * * * * *
+Luke's turn - remove how many?						Luke's turn - remove how many?
+
+2 stones left: * *							2 stones left: * *
+Han's turn - remove how many?						Han's turn - remove how many?
+
+1 stones left: *							1 stones left: *
+Luke's turn - remove how many?						Luke's turn - remove how many?
+
+Game Over								Game Over
+Han wins!								Han wins!
+
+Do you want to play again (Y/N):					Do you want to play again (Y/N):
+Please enter upper bound of stone removal:				Please enter upper bound of stone removal:
+
+Please enter initial number of stones:					Please enter initial number of stones:
+
+15 stones left: * * * * * * * * * * * * * * *				15 stones left: * * * * * * * * * * * * * * *
+Luke's turn - remove how many?						Luke's turn - remove how many?
+
+14 stones left: * * * * * * * * * * * * * *				14 stones left: * * * * * * * * * * * * * *
+Han's turn - remove how many?						Han's turn - remove how many?
+
+12 stones left: * * * * * * * * * * * *					12 stones left: * * * * * * * * * * * *
+Luke's turn - remove how many?						Luke's turn - remove how many?
+
+9 stones left: * * * * * * * * *					9 stones left: * * * * * * * * *
+Han's turn - remove how many?						Han's turn - remove how many?
+
+5 stones left: * * * * *						5 stones left: * * * * *
+Luke's turn - remove how many?						Luke's turn - remove how many?
+
+Game Over								Game Over
+Han wins!								Han wins!
+
+Do you want to play again (Y/N):					Do you want to play again (Y/N):
+
+Your results seem to be CORRECT :-).
+============================================
+src/Nimsys.java
+17:50:53_Tuesday_27_March_2018
+============================================
+/**
+ * The University of Melbourne
+ * COMP90041 Programming and Software Development
+ * Student: Chen Wendong
+ * Student ID: 931018    Username: wendongc1
+ * Date: Mar 27th,2018
+ * This program implement a simple variant of the game of Nim.
+ * It's a two player game which begins with a number of stones. Two players remove
+ * some stones alternatively until the last stone is removed. The player who
+ * removes the last stone loses.
+ */
+import java.util.Scanner;   
+//This "Scanner" class have different methods which can get values typed in at the keyboard. 
+
+public class Nimsys {
+/* 
+ * This class with main method manages the process of the game.
+ * We can use its getName() method to type players' name.
+ * Then we set the initial number of stones and upper bound of stones
+ * players can remove once. By using RemoveStone() method implements
+ * the game step by step until game over. The "do_while" loop is set to
+ * restart the game if you want to.
+ */
+	
+	public static void main(String[] args){
+		Scanner Keyboard = new Scanner(System.in);  
+		//The "Keyboard" object is created to get user's input.
+
+		String AnotherGame;  
+		//This variable is to get user's input of whether replays the game.
+
+		boolean TureofFalse; 
+		//This variable is to judge if the game need to replay.
+
+		System.out.println("Welcome to Nim");
+		System.out.println();
+		System.out.println("Please enter Player 1's name:");
+		NimPlayer Playerone=new NimPlayer(Keyboard);
+		//The "Playerone" object is created which represents the first player.
+
+		System.out.println();
+
+		System.out.println("Please enter Player 2's name:");
+		NimPlayer Playertwo=new NimPlayer(Keyboard);
+		//The "Playertwo" object is created which represents the second player.
+
+		
+
+		do{
+			Playerone.setInitial(Keyboard);
+			//Here we set the upper bound of each remove and the initial number of stones.
+
+			Playerone.printStones(Playerone.NumberofStones);
+			//Here we print "*" as one stone on the screen by using printStones() method.
+
+			while(Playerone.NumberofStones>0) {
+			//This while loop means the game will be continually running until the number of stones is 0.
+		
+				Playerone.IsGameOver(Playerone.RemoveStone(Playerone.getName(), Keyboard), Playertwo.getName());
+				//Play one removes stones and judge if the game is over.
+
+				if(Playerone.NumberofStones>0){
+					Playertwo.NumberofStones=Playerone.NumberofStones;
+					Playertwo.IsGameOver(Playertwo.RemoveStone(Playertwo.getName(), Keyboard), Playerone.getName());
+					//Player two removes stones and judge if the game is over.
+
+					Playerone.NumberofStones=Playertwo.NumberofStones;
+				}	
+			}
+
+			System.out.print("Do you want to play again (Y/N):");
+			AnotherGame=Keyboard.next();
+			//If player types "Y", the game will replay again, otherwise the game over.
+
+			TureofFalse="Y".equals(AnotherGame);
+
+		}while (TureofFalse==true);
+		//This "do_while" loop can run the game again depending on the Y/N answer.
+	}
+}============================================
+src/NimPlayer.java
+17:50:53_Tuesday_27_March_2018
+============================================
+import java.util.Scanner;
+
+public class NimPlayer{
+/**
+ * This class defines players of the game and describes some methods of the game including 
+ * remove of stones, setting up of the upper bound and initial number of stones, judgement
+ * of the game result and printing stones on the screen.
+ */
+	private String NameofPlayer;
+	//This variable stores players' name.
+
+	public int UpperBound, NumberofStones;
+	/*
+	 * These variables are the upper bound of stones player can remove once and
+	 * the number of stones, respectively.
+	*/
+
+	
+	public NimPlayer(Scanner keyboard){
+		String Name=keyboard.nextLine();
+		this.NameofPlayer=Name;
+	}
+
+	public String getName(){
+		return this.NameofPlayer;
+	}
+
+	public int RemoveStone(String player, Scanner keyboard){
+	//This method is to perform remove operation.
+		int NumberofRemove;
+		//This variable is the number of stones player removes once.
+
+		System.out.println(player + "'s turn - remove how many?");
+		NumberofRemove=keyboard.nextInt();
+		System.out.println();
+		return NumberofRemove;
+	}
+
+	public void setInitial(Scanner keyboard){
+	//This method sets the upper bound and the initial number of stones.
+	                       
+		System.out.println();
+		System.out.println("Please enter upper bound of stone removal:");
+		UpperBound = keyboard.nextInt();
+		//Here we set the upper bound of stones that players can remove once.
+		System.out.println();
+
+		System.out.println("Please enter initial number of stones:");
+		NumberofStones = keyboard.nextInt();
+		//Here we set the initial number of stones of the game.
+		System.out.println();
+	}
+
+	public void IsGameOver(int numberofremove, String winner){
+	/*
+	 * This method is to calculate the remaining stones and print them on the screen by asterisks.
+	 * If the last stone is removed, it will announce the winner.
+	 */
+	
+		NumberofStones=NumberofStones - numberofremove;
+
+		if(NumberofStones==0) {
+			System.out.println("Game Over");
+			System.out.println(winner + " wins!");
+			System.out.println();
+		}
+		else {
+			printStones(NumberofStones);
+		}
+	}
+
+	public void printStones(int stoneNumber) {
+	//This method is to print stones using asterisk "*".
+		
+		System.out.print(stoneNumber + " stones left:");
+		int i=0;
+		while (i<stoneNumber) {
+			System.out.print(" *");
+			i++;
+		}
+		System.out.print("\n");
+	}
+}

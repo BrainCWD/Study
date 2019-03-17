@@ -1,0 +1,747 @@
+============================================
+vis/result.rtx
+02:59:34_Sunday_29_April_2018
+============================================
+Feedback:
+	Your program ("Nimsys.java") has been submitted successfully.
+	Compiling your program with "javac"...
+	Your program has been result.rtxd successfully :-)
+Now, it's your responsibility to test your program for correctness!
+Here is a simple test case, and the results:
+============================================
+Test for input file: in1
+Expected results:							Your results:
+Welcome to Nim								Welcome to Nim
+
+$									$
+$									$
+$									$
+$									$
+$									$
+$george,George,Washington,0 games,0 wins				$george,George,Washington,0 games,0 wins
+jadams,John,Adams,0 games,0 wins					jadams,John,Adams,0 games,0 wins
+jmadison,James,Madison,0 games,0 wins					jmadison,James,Madison,0 games,0 wins
+jmonroe,James,Monroe,0 games,0 wins					jmonroe,James,Monroe,0 games,0 wins
+tom,Thomas,Jefferson,0 games,0 wins					tom,Thomas,Jefferson,0 games,0 wins
+
+$jmadison,James,Madison,0 games,0 wins					$jmadison,James,Madison,0 games,0 wins
+
+$									$
+
+Your results seem to be CORRECT :-).
+============================================
+Test for input file: in2
+Expected results:							Your results:
+Welcome to Nim								Welcome to Nim
+
+$									$
+$The player already exists.						$The player already exists.
+
+$									$
+$gbush,George,Bush,0 games,0 wins					$gbush,George,Bush,0 games,0 wins
+george,George,Washington,0 games,0 wins					george,George,Washington,0 games,0 wins
+
+$									$
+
+Your results seem to be CORRECT :-).
+============================================
+Test for input file: in3
+Expected results:							Your results:
+Welcome to Nim								Welcome to Nim
+
+$									$
+$									$
+$									$
+$george,George,Washington,0 games,0 wins				$george,George,Washington,0 games,0 wins
+jadams,John,Adams,0 games,0 wins					jadams,John,Adams,0 games,0 wins
+tom,Thomas,Jefferson,0 games,0 wins					tom,Thomas,Jefferson,0 games,0 wins
+
+$The player does not exist.						$The player does not exist.
+
+$									$
+$george,George,Washington,0 games,0 wins				$george,George,Washington,0 games,0 wins
+jadams,John,Adams,0 games,0 wins					jadams,John,Adams,0 games,0 wins
+
+$Are you sure you want to remove all players? (y/n)			$Are you sure you want to remove all players? (y/n)
+
+$									$
+$									$
+
+Your results seem to be CORRECT :-).
+============================================
+Test for input file: in4
+Expected results:							Your results:
+Welcome to Nim								Welcome to Nim
+
+$									$
+$jcarter,Jimmy,Carter,0 games,0 wins					$jcarter,Jimmy,Carter,0 games,0 wins
+
+$The player does not exist.						$The player does not exist.
+
+$									$
+$jcarter,James,Carter,0 games,0 wins					$jcarter,James,Carter,0 games,0 wins
+
+$									$
+$									$
+$									$
+$george,George,Washington,0 games,0 wins				$george,George,Washington,0 games,0 wins
+jadams,John,Adams,0 games,0 wins					jadams,John,Adams,0 games,0 wins
+
+$									$
+Initial stone count: 10							Initial stone count: 10
+Maximum stone removal: 3						Maximum stone removal: 3
+Player 1: George Washington						Player 1: George Washington
+Player 2: John Adams							Player 2: John Adams
+
+10 stones left: * * * * * * * * * *					10 stones left: * * * * * * * * * *
+George's turn - remove how many?					George's turn - remove how many?
+
+8 stones left: * * * * * * * *						8 stones left: * * * * * * * *
+John's turn - remove how many?						John's turn - remove how many?
+
+6 stones left: * * * * * *						6 stones left: * * * * * *
+George's turn - remove how many?					George's turn - remove how many?
+
+4 stones left: * * * *							4 stones left: * * * *
+John's turn - remove how many?						John's turn - remove how many?
+
+3 stones left: * * *							3 stones left: * * *
+George's turn - remove how many?					George's turn - remove how many?
+
+2 stones left: * *							2 stones left: * *
+John's turn - remove how many?						John's turn - remove how many?
+
+1 stones left: *							1 stones left: *
+George's turn - remove how many?					George's turn - remove how many?
+
+Game Over								Game Over
+John Adams wins!							John Adams wins!
+
+$100% | 01 games | John Adams						$100% | 01 games | John Adams
+0%   | 01 games | George Washington					0%   | 01 games | George Washington
+
+$									$
+
+Your results seem to be CORRECT :-).
+============================================
+src/Nimsys.java
+02:46:05_Sunday_29_April_2018
+============================================
+/**
+ * The University of Melbourne
+ * COMP90041 Programming and Software Development
+ * Student: Chen Wendong
+ * Student ID: 931018    Username: wendongc1
+ * Date: Apr 26th,2018
+ *
+ * This program is an implementation of the game of Nim.
+ * It's a two player game which begins with a number of stones. Two players remove
+ * some stones alternatively until the last stone is removed. The player who
+ * removes the last stone loses.
+ * In Project B, the Nim program adds more functions than Project A, which making
+ * full use of JAVA's OOP. In addition to playing games, the system can add players, delete
+ * players and edit players. Futhermore, the system can make game statistics and allow it to
+ * be edited, displayed and ranked.
+ */
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+public class Nimsys {
+	/**
+	 * This class with main method manages the process of the whole program. When
+	 * user text commands on the screen, the program executes commands until an
+	 * "exit" command is texted. We have Addplayer, Removeplayer, Editplayer,
+	 * Resetstats, Displayplayer, Rankings Exit methods in this class, which improve
+	 * functionality of Nim.
+	 */
+	private int playerindex = 0;
+
+	private Scanner keyboard = new Scanner(System.in);
+	// The "Keyboard" object is created to get user's input.
+
+	private NimPlayer[] player = new NimPlayer[101];
+	// This is an array of players.
+
+	private NimGame game;
+
+	private StringTokenizer command;
+
+	public static void main(String[] args) {
+
+		String order = null;
+		// This variable is to get user's command.
+
+		Nimsys call = new Nimsys();
+		// This object is to invoke/call the methods in Nimsys class.
+
+		System.out.println("Welcome to Nim");
+
+		do {
+			System.out.println();
+			System.out.print("$");
+			// All the input is texted after this prompt "$".
+
+			call.command = new StringTokenizer(call.keyboard.nextLine());
+			// This is to recover the words or tokens in a multi-word String.
+
+			order = call.command.nextToken();
+
+			if (order.equals("addplayer")) {
+				/*
+				 * When the order is "addplayer", excute the addplayer command, i.e., call the
+				 * Addplayer method.
+				 */
+				call.Addplayer(call.command.nextToken(", "), call.command.nextToken(", "), call.command.nextToken(", "),
+						call.player);
+
+			} else if (order.equals("removeplayer")) {
+				/*
+				 * When the order is "removeplayer", excute the removeplayer command, i.e., call
+				 * the Removeplayer method.
+				 */
+				call.Removeplayer(call.command, call.player, call.keyboard);
+
+			} else if (order.equals("editplayer")) {
+				/*
+				 * When the order is "editplayer", excute the editplayer command, i.e., call the
+				 * Editplayer method.
+				 */
+				call.Editplayer(call.command.nextToken(", "), call.command.nextToken(", "),
+						call.command.nextToken(", "), call.player);
+
+			} else if (order.equals("displayplayer")) {
+				/*
+				 * When the order is "displayplayer", excute the displayplayer command, i.e.,
+				 * call the Displayplayer method.
+				 */
+				call.Displayplayer(call.command, call.player);
+
+			} else if (order.equals("startgame")) {
+				/*
+				 * When the order is "startgame", excute the startgame command, i.e., call the
+				 * Startgame method.
+				 */
+				call.Startgame(call.command, call.player, call.keyboard);
+
+			} else if (order.equals("resetstats")) {
+				/*
+				 * When the order is "resetstats", excute the resetstats command, i.e., call the
+				 * Resetstats method.
+				 */
+				call.Resetstats(call.command, call.player, call.keyboard);
+
+			} else if (order.equals("rankings")) {
+				/*
+				 * When the order is "rankings", excute the rankings command, i.e., call the
+				 * Rankings method.
+				 */
+				call.Rankings(call.command, call.player);
+			}
+
+		} while (!order.equals("exit"));
+		System.out.println();
+		/*
+		 * When the order is "exit", exit the while loop and excute the exit command,
+		 * i.e., call the Exit method.
+		 */
+		call.Exit();
+	}
+
+	private void Addplayer(String userName, String Familyname, String Givenname, NimPlayer[] Player) {
+		// This method is to perform addplayer operation.
+
+		if (playerindex != 0) {
+			for (int i = 0; i < playerindex; i++) {
+				if (userName.equals(Player[i].getName())) {
+					System.out.println("The player already exists.");
+					break;
+				}
+
+				if (i == playerindex - 1) {
+					Player[playerindex] = new NimPlayer(userName, Familyname, Givenname);
+					playerindex = playerindex + 1;
+					break;
+				}
+			}
+		} else {
+			Player[playerindex] = new NimPlayer(userName, Familyname, Givenname);
+			playerindex = playerindex + 1;
+		}
+	}
+
+	private void Removeplayer(StringTokenizer Command, NimPlayer[] Player, Scanner Keyboard) {
+		// This method is to perform removeplayer operation.
+
+		if (Command.hasMoreElements()) {
+			String userName = Command.nextToken();
+			NimPlayer[] Temporary = new NimPlayer[100];
+
+			int a = 0;
+			if (playerindex != 0) {
+				for (int i = 0; i < playerindex; i++) {
+					if (!userName.equals(Player[i].getName())) {
+						Temporary[a] = Player[i];
+						a = a + 1;
+					}
+
+					if (a == playerindex) {
+						System.out.println("The player does not exist.");
+					}
+				}
+
+				for (int i = 0; i < a; i++) {
+					Player[i] = Temporary[i];
+				}
+				playerindex = a;
+			} else {
+				System.out.println("The player does not exist.");
+			}
+		} else {
+			System.out.println("Are you sure you want to remove all players? (y/n)");
+			if ("y".equals(Keyboard.nextLine())) {
+				playerindex = 0;
+			}
+		}
+	}
+
+	private void Editplayer(String userName, String Familyname, String Givenname, NimPlayer[] Player) {
+		// This method is to perform editplayer operation.
+
+		if (playerindex != 0) {
+			for (int i = 0; i < playerindex; i++) {
+				if (userName.equals(Player[i].getName())) {
+					Player[i].setFamilyname(Familyname);
+					Player[i].setGivenname(Givenname);
+					break;
+				}
+
+				if (i == playerindex - 1) {
+					System.out.println("The player does not exist.");
+				}
+			}
+		} else {
+			System.out.println("The player does not exist.");
+		}
+	}
+
+	private void Displayplayer(StringTokenizer Command, NimPlayer[] Player) {
+		// This method is to perform display operation.
+
+		if (Command.hasMoreElements()) {
+			String userName = Command.nextToken();
+			if (playerindex != 0) {
+				for (int i = 0; i < playerindex; i++) {
+					if (userName.equals(Player[i].getName())) {
+						System.out.println(Player[i].getName() + "," + Player[i].getGivenname() + ","
+								+ Player[i].getFamilyname() + "," + Player[i].getGamenumber() + " games,"
+								+ Player[i].getWinnumber() + " wins");
+						break;
+					}
+
+					if (i == playerindex - 1) {
+						System.out.println("The player does not exist.");
+					}
+				}
+			} else {
+				System.out.println("The player does not exist.");
+			}
+		} else {
+			if (playerindex != 0) {
+				if (playerindex != 1) {
+					rankings(Player);
+				}
+				for (int i = 0; i < playerindex; i++) {
+					System.out.println(
+							Player[i].getName() + "," + Player[i].getGivenname() + "," + Player[i].getFamilyname() + ","
+									+ Player[i].getGamenumber() + " games," + Player[i].getWinnumber() + " wins");
+				}
+			}
+
+		}
+
+	}
+
+	private void Resetstats(StringTokenizer Command, NimPlayer[] Player, Scanner Keyboard) {
+		// This method is to perform resetstats operation.
+
+		if (Command.hasMoreElements()) {
+			String userName = Command.nextToken();
+			if (playerindex != 0) {
+				for (int i = 0; i < playerindex; i++) {
+					if (userName.equals(Player[i].getName())) {
+						Player[i].setGamenumber(0);
+						Player[i].setWinnumber(0);
+						break;
+					}
+
+					if (i == playerindex - 1) {
+						System.out.println("The player does not exist.");
+					}
+				}
+			} else {
+				System.out.println("The player does not exist.");
+			}
+		} else {
+			System.out.println("Are you sure you want to reset all player statistics? (y/n)");
+			if ("y".equals(Keyboard.nextLine())) {
+				for (int i = 0; i < playerindex; i++) {
+					Player[i].setGamenumber(0);
+					Player[i].setWinnumber(0);
+				}
+			}
+		}
+	}
+
+	private void Rankings(StringTokenizer Command, NimPlayer[] Player) {
+		// This method is to perform ranking operation.
+
+		if (playerindex != 0) {
+			for (int i = 0; i < playerindex; i++) {
+				Player[i].setPercentage();
+			}
+			NimPlayer[] Temp = new NimPlayer[101];
+			/*
+			 * This array is the same as the player array, but it will be ranked in
+			 * ascending order.
+			 */
+
+			if (playerindex > 1) {
+				/*
+				 * First, rank the player array in alpabetical order and then rank the winning
+				 * rate in descending order for player array and in ascending order for the Temp
+				 * array..
+				 */
+				rankings(Player);
+				// Rank the player array in alpabetical order.
+
+				for(int i=0; i < playerindex; i++){
+					Temp[i] = Player[i];
+				}
+
+				for (int i = 0; i <= playerindex - 2; i++) {
+					int max = i;
+					for (int j = i + 1; j <= playerindex - 1; j++) {
+						if (Player[max].getPercentage() < Player[j].getPercentage()) {
+							max = j;
+						}
+					}
+					Player[100] = Player[max];
+					Player[max] = Player[i];
+					Player[i] = Player[100];
+				}
+
+				for (int i = 0; i <= playerindex - 2; i++) {
+					int min = i;
+					for (int j = i + 1; j <= playerindex - 1; j++) {
+						if (Temp[min].getPercentage() > Temp[j].getPercentage()) {
+							min = j;
+						}
+					}
+					Temp[100] = Temp[min];
+					Temp[min] = Temp[i];
+					Temp[i] = Temp[100];
+				}
+			}
+
+			if (Command.hasMoreElements()) {
+				String nextorder = Command.nextToken();
+				if (nextorder.equals("asc")) {
+					for (int i = 0; i < playerindex && i < 10; i++) {
+						System.out.printf("%-4s %s %02d %s %s %s", Temp[i].getPercentageformat(), "|",
+								Temp[i].getGamenumber(), "games |", Temp[i].getGivenname(), Temp[i].getFamilyname());
+						System.out.println();
+
+					}
+				} else if (nextorder.equals("desc")) {
+					for (int i = 0; i < playerindex && i < 10; i++) {
+						System.out.printf("%-4s %s %02d %s %s %s", Player[i].getPercentageformat(), "|",
+								Player[i].getGamenumber(), "games |", Player[i].getGivenname(),
+								Player[i].getFamilyname());
+						System.out.println();
+					}
+				}
+			} else {
+				for (int i = 0; i < playerindex && i < 10; i++) {
+					System.out.printf("%-4s %s %02d %s %s %s", Player[i].getPercentageformat(), "|",
+							Player[i].getGamenumber(), "games |", Player[i].getGivenname(), Player[i].getFamilyname());
+					System.out.println();
+				}
+
+			}
+		}
+	}
+
+	private NimPlayer[] rankings(NimPlayer[] Player) {
+		// This method is to perform ranking operation by alphabetic order.
+
+		for (int i = 0; i <= playerindex - 2; i++) {
+			int min = i;
+			for (int j = i + 1; j <= playerindex - 1; j++) {
+				if (Player[min].getName().compareTo(Player[j].getName()) > 0) {
+					min = j;
+				}
+			}
+			Player[100] = Player[min];
+			Player[min] = Player[i];
+			Player[i] = Player[100];
+		}
+		return Player;
+	}
+
+	private void Startgame(StringTokenizer Command, NimPlayer[] Player, Scanner Keyboard) {
+		// This method is to perform startgame operation.
+		game = new NimGame(Integer.parseInt(Command.nextToken(", ")), Integer.parseInt(Command.nextToken(", ")),
+				Command.nextToken(", "), Command.nextToken(", "));
+		game.Gameprocess(Player, Keyboard, playerindex);
+	}
+
+	private void Exit() {
+		// This method is to perform exit operation, i.e., end the program.
+		System.exit(0);
+	}
+}============================================
+src/NimPlayer.java
+02:46:04_Sunday_29_April_2018
+============================================
+public class NimPlayer {
+	/**
+	 * In this class difines all the attributes of each player and also has lots of
+	 * accssors and mutators due to the private type.
+	 */
+	private String username, family_name, given_name;
+	/*
+	 * These variables are the username, familyname and givenname of the players,
+	 * respectively.
+	 */
+
+	private int gamenumber = 0, winnumber = 0;
+	/*
+	 * These variables are the game number and win number statistics that players
+	 * played, respectively.
+	 */
+
+	private double percentage;
+	// This variable is the players' winning rate.
+
+	private String percentageFormat;
+	// This variable is the players' winning rate writting in '%' format.
+
+	public NimPlayer(String Username, String Familyname, String Givenname) {
+		/*
+		 * The constuctor of every player, in which defines players' username,
+		 * familyname and givenname.
+		 */
+		this.username = Username;
+		this.family_name = Familyname;
+		this.given_name = Givenname;
+	}
+
+	public String getName() {
+		// The accessor of players' username.
+		return this.username;
+	}
+
+	public String getFamilyname() {
+		// The accessor of players' familyname.
+		return this.family_name;
+	}
+
+	public void setFamilyname(String Familyname) {
+		// The mutator of players' familyname.
+		this.family_name = Familyname;
+	}
+
+	public String getGivenname() {
+		// The accessor of players' givenname.
+		return this.given_name;
+	}
+
+	public void setGivenname(String Givenname) {
+		// The mutator of players' givenname.
+		this.given_name = Givenname;
+	}
+
+	public int getGamenumber() {
+		// The accessor of players' gamenumber.
+		return this.gamenumber;
+	}
+
+	public void setGamenumber(int Number) {
+		// The mutator of players' gamenumber.
+		if (Number == 1) {
+			this.gamenumber = gamenumber + 1;
+		} else {
+			this.gamenumber = 0;
+		}
+	}
+
+	public int getWinnumber() {
+		// The accessor of players' winnumber.
+		return this.winnumber;
+	}
+
+	public void setWinnumber(int Number) {
+		// The mutator of players' winnumber.
+		if (Number == 1) {
+			this.winnumber = winnumber + 1;
+		} else {
+			this.winnumber = 0;
+		}
+	}
+
+	public double getPercentage() {
+		// The accessor of players' winning rate.
+		return this.percentage;
+	}
+
+	public void setPercentage() {
+		// The mutator of players' winning rate.
+		if (this.winnumber == 0) {
+			this.percentage = 0;
+		} else {
+			this.percentage = (double) this.winnumber * 100 / (double) this.gamenumber;
+		}
+	}
+
+	public String getPercentageformat() {
+		// Format the players' winning rate.
+		return this.percentageFormat = Math.round(this.percentage) + "%";
+	}
+
+}============================================
+src/NimGame.java
+02:46:04_Sunday_29_April_2018
+============================================
+import java.util.Scanner;
+
+public class NimGame {
+	private int stonenumber, upperbound;
+	/*
+	 * These variables are the stone number and upperbound of the stone players can
+	 * remove once, repectively.
+	 */
+	private String player1, player2;
+	// These variables are two players' name, respectively.
+
+	private int player1index, player2index;
+	// These variables are the index of two players in the player array.
+
+	public NimGame(int Initialnumber, int Upperbound, String Player1, String Player2) {
+		/*
+		 * The constructor of the Nim game defines the initial number of stones, the
+		 * upperbound of the stones which players can remove once and two players.
+		 */
+		this.stonenumber = Initialnumber;
+		this.upperbound = Upperbound;
+		this.player1 = Player1;
+		this.player2 = Player2;
+	}
+
+	public void Gameprocess(NimPlayer[] Player, Scanner Keyboard, int Index) {
+		/*
+		 * This method contains all the process of the Nim game. First determine if two
+		 * players exist and then process the game.
+		 */
+		player1index = exist(player1, Index, Player);
+		player2index = exist(player2, Index, Player);
+
+		if (-1 != player1index && -1 != player2index) {
+			Player[player1index].setGamenumber(1);
+			Player[player2index].setGamenumber(1);
+			System.out.println();
+			System.out.println("Initial stone count: " + stonenumber);
+			System.out.println("Maximum stone removal: " + upperbound);
+			System.out.println(
+					"Player 1: " + Player[player1index].getGivenname() + " " + Player[player1index].getFamilyname());
+			System.out.println(
+					"Player 2: " + Player[player2index].getGivenname() + " " + Player[player2index].getFamilyname());
+			System.out.println();
+
+			printStones(stonenumber);
+			while (stonenumber > 0) {
+				int validRemoval = stonenumber;
+				while (validRemoval == stonenumber) {
+					IsGameOver(removeStone(Player[player1index].getGivenname(), Keyboard), Player[player2index]);
+				}
+
+				if (stonenumber > 0) {
+					validRemoval = stonenumber;
+					while (validRemoval == stonenumber) {
+						IsGameOver(removeStone(Player[player2index].getGivenname(), Keyboard), Player[player1index]);
+					}
+				}
+
+			}
+			String junk = Keyboard.nextLine();
+		}
+	}
+
+	private int exist(String Playername, int index, NimPlayer[] Player) {
+		// This method is to determine if the players exist.
+		if (index != 0) {
+			for (int i = 0; i < index; i++) {
+				if (Playername.equals(Player[i].getName())) {
+					return i;
+				}
+				if (i == index - 1) {
+					System.out.println("One of the players does not exist");
+				}
+			}
+
+		} else {
+			System.out.println("One of the players does not exist");
+		}
+
+		return -1;
+	}
+
+	private int removeStone(String playergivenname, Scanner Keyboard) {
+		// This method is to perform remove operation.
+
+		int NumberofRemove;
+		// This variable is the number of stones player removes once.
+
+		System.out.println(playergivenname + "'s turn - remove how many?");
+		NumberofRemove = Keyboard.nextInt();
+		System.out.println();
+
+		if (NumberofRemove > upperbound || NumberofRemove > stonenumber || NumberofRemove <= 0) {
+			if (stonenumber >= upperbound) {
+				System.out.println("Invalid move. You must remove between 1 and " + upperbound + " stones.");
+				System.out.println();
+			} else {
+				System.out.println("Invalid move. You must remove between 1 and " + stonenumber + " stones.");
+				System.out.println();
+			}
+			return 0;
+		}
+		return NumberofRemove;
+	}
+
+	private void IsGameOver(int numberofremove, NimPlayer Player) {
+		/*
+		 * This method is to calculate the remaining stones and print them on the screen
+		 * by asterisks. If the last stone is removed, it will announce the winner.
+		 */
+
+		stonenumber = stonenumber - numberofremove;
+
+		if (stonenumber == 0) {
+			System.out.println("Game Over");
+			System.out.println(Player.getGivenname() + " " + Player.getFamilyname() + " wins!");
+			Player.setWinnumber(1);
+		} else if (numberofremove != 0) {
+			printStones(stonenumber);
+		}
+	}
+
+	private void printStones(int stoneNumber) {
+		// This method is to print stones using asterisk "*".
+
+		System.out.print(stoneNumber + " stones left:");
+		for (int i = 0; i < stoneNumber; i++) {
+			System.out.print(" *");
+		}
+		System.out.println();
+	}
+}

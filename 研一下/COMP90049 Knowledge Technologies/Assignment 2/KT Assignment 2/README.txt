@@ -1,0 +1,1 @@
+There are six txt files in the zip archive. Two classifiers are used to predict three different datasets which are best10, best50 and best200. These two classifiers are naive Bayes and dicision tree classifier, respectively.
